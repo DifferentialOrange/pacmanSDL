@@ -2,11 +2,14 @@
 #include <string>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <vector>
 #include "res_path.hpp"
 #include "cleanup.hpp"
 
-const int SCREEN_WIDTH  = 100;
-const int SCREEN_HEIGHT = 100;
+const int SCREEN_WIDTH   = 400;
+const int SCREEN_HEIGHT  = 400;
+const int TEXTURE_WIDTH  = 100;
+const int TEXTURE_HEIGHT = 100;
 
 /**
 * Log an SDL error with some error message to the output stream of our choice
@@ -114,6 +117,60 @@ int main()
         return 1;
     }
 
+    std::vector<std::vector<unsigned>> gameMap = {
+        {1, 1, 1, 1},
+        {1, 0, 0, 1},
+        {1, 0, 0, 1},
+        {1, 1, 1, 1}
+    };
+
+    unsigned gamePosX = 1;
+    unsigned gamePosY = 1;
+
+    bool quit = false;
+    SDL_Event e;
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT)
+                quit = true;
+
+            if (e.type == SDL_KEYDOWN) {
+                switch (e.key.keysym.sym) {
+                case SDLK_UP:
+                    if (gameMap[gamePosX][gamePosY - 1] == 0)
+                        gamePosY -= 1;
+                    break;
+
+                case SDLK_DOWN:
+                    if (gameMap[gamePosX][gamePosY + 1] == 0)
+                        gamePosY += 1;
+                    break;
+
+                case SDLK_LEFT:
+                    if (gameMap[gamePosX - 1][gamePosY] == 0)
+                        gamePosX -= 1;
+                    break;
+
+                case SDLK_RIGHT:
+                    if (gameMap[gamePosX + 1][gamePosY] == 0)
+                        gamePosX += 1;
+                    break;
+
+                case SDLK_ESCAPE:
+                    quit = true;
+                    break;
+
+                default:
+                    break;
+                }
+            }
+        }
+
+        // Render the scene
+        SDL_RenderClear(renderer);
+        renderTexture(image, renderer, gamePosX * TEXTURE_WIDTH, gamePosY * TEXTURE_HEIGHT);
+        SDL_RenderPresent(renderer);
+    }
         
     // Render the scene
     SDL_RenderClear(renderer);
