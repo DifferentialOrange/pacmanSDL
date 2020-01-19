@@ -3,13 +3,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <vector>
+#include "map.hpp"
+#include "consts.hpp"
 #include "res_path.hpp"
 #include "cleanup.hpp"
-
-const int SCREEN_WIDTH   = 400;
-const int SCREEN_HEIGHT  = 400;
-const int TEXTURE_WIDTH  = 100;
-const int TEXTURE_HEIGHT = 100;
 
 /**
 * Log an SDL error with some error message to the output stream of our choice
@@ -76,6 +73,16 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *
     renderTexture(tex, ren, dst, clip);
 }
 
+void renderScene(SDL_Renderer *renderer, SDL_Texture *image, int scaledGamePosX, int scaledGamePosY)
+{
+    // Render the scene
+    SDL_RenderClear(renderer);
+    renderTexture(image, renderer,
+        getCoordinate(transformToTip(scaledGamePosX)),
+        getCoordinate(transformToTip(scaledGamePosY)));
+    SDL_RenderPresent(renderer);
+}
+
 int main()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -117,17 +124,16 @@ int main()
         return 1;
     }
 
-    std::vector<std::vector<unsigned>> gameMap = {
-        {1, 1, 1, 1},
-        {1, 0, 0, 1},
-        {1, 0, 0, 1},
-        {1, 1, 1, 1}
-    };
+    std::vector<std::vector<int>> gameMap = getMap();
 
     unsigned gamePosX = 1;
     unsigned gamePosY = 1;
 
+    unsigned scaledGamePosX = transformToCenter(gamePosX);
+    unsigned scaledGamePosY = transformToCenter(gamePosY);
+
     bool quit = false;
+    direction dir = STOP;
     SDL_Event e;
     while (!quit) {
         while (SDL_PollEvent(&e)) {
@@ -137,23 +143,31 @@ int main()
             if (e.type == SDL_KEYDOWN) {
                 switch (e.key.keysym.sym) {
                 case SDLK_UP:
-                    if (gameMap[gamePosX][gamePosY - 1] == 0)
-                        gamePosY -= 1;
+                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, UP))
+                        dir = UP;
+                    else
+                        dir = STOP;
                     break;
 
                 case SDLK_DOWN:
-                    if (gameMap[gamePosX][gamePosY + 1] == 0)
-                        gamePosY += 1;
+                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, DOWN))
+                        dir = DOWN;
+                    else
+                        dir = STOP;
                     break;
 
                 case SDLK_LEFT:
-                    if (gameMap[gamePosX - 1][gamePosY] == 0)
-                        gamePosX -= 1;
+                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, LEFT))
+                        dir = LEFT;
+                    else
+                        dir = STOP;
                     break;
 
                 case SDLK_RIGHT:
-                    if (gameMap[gamePosX + 1][gamePosY] == 0)
-                        gamePosX += 1;
+                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, RIGHT))
+                        dir = RIGHT;
+                    else
+                        dir = STOP;
                     break;
 
                 case SDLK_ESCAPE:
@@ -166,17 +180,41 @@ int main()
             }
         }
 
-        // Render the scene
-        SDL_RenderClear(renderer);
-        renderTexture(image, renderer, gamePosX * TEXTURE_WIDTH, gamePosY * TEXTURE_HEIGHT);
-        SDL_RenderPresent(renderer);
+        switch (dir) {
+        case UP:
+            for (int i = 0; i < MAP_SCALE; ++i) {
+                scaledGamePosY -= 1;
+                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                SDL_Delay(100);
+            }
+            break;
+        case DOWN:
+            for (int i = 0; i < MAP_SCALE; ++i) {
+                scaledGamePosY += 1;
+                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                SDL_Delay(100);
+            }
+            break;
+        case LEFT:
+            for (int i = 0; i < MAP_SCALE; ++i) {
+                scaledGamePosX -= 1;
+                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                SDL_Delay(100);
+            }
+            break;
+        case RIGHT:
+            for (int i = 0; i < MAP_SCALE; ++i) {
+                scaledGamePosX += 1;
+                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                SDL_Delay(100);
+            }
+            break;
+        case STOP:
+            renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+            break;
+        }
+        dir = STOP;
     }
-        
-    // Render the scene
-    SDL_RenderClear(renderer);
-    renderTexture(image, renderer, 0, 0);
-    SDL_RenderPresent(renderer);
-    SDL_Delay(5000);
 
     cleanup(image, renderer, window);
     IMG_Quit();
