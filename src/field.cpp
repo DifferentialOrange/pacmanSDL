@@ -12,7 +12,7 @@ static std::vector<std::vector<GridMesh>> readGameGrid(const std::string& fileNa
 
     gridFile >> gridWidth >> gridHeigth;
 
-    std::vector<std::vector<GridMesh>> gameGrid(gridHeigth, std::vector<GridMesh>(gridWidth));
+    static std::vector<std::vector<GridMesh>> gameGrid(gridHeigth, std::vector<GridMesh>(gridWidth));
 
     for (int i = 0; i < gridWidth; ++i)
         for (int j = 0; j < gridHeigth; ++j) {
@@ -30,6 +30,11 @@ static std::vector<std::vector<GridMesh>> readGameGrid(const std::string& fileNa
         }
 
     return gameGrid;
+}
+
+std::vector<std::vector<GridMesh>> getGameGrid()
+{
+    return readGameGrid("field.txt");
 }
 
 std::vector<std::vector<GridMesh>> getAnimationGrid()
@@ -64,22 +69,22 @@ bool canGo(const std::vector<std::vector<GridMesh>>& animationGrid, int agX, int
     switch (direction) {
     case UP:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[AGposY - ANIMATION_GRID_SCALE][AGposX + i] == WALL)
+            if (animationGrid[agY - ANIMATION_GRID_SCALE][agX + i] == WALL)
                 can = false;
         break;
     case DOWN:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[AGposY + ANIMATION_GRID_SCALE][AGposX + i] == WALL)
+            if (animationGrid[agY + ANIMATION_GRID_SCALE][agX + i] == WALL)
                 can = false;
         break;
     case LEFT:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[AGposY + i][AGposX - ANIMATION_GRID_SCALE] == WALL)
+            if (animationGrid[agY + i][agX - ANIMATION_GRID_SCALE] == WALL)
                 can = false;
         break;
     case RIGHT:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[AGposY + i][AGposX + ANIMATION_GRID_SCALE] == WALL)
+            if (animationGrid[agY + i][agX + ANIMATION_GRID_SCALE] == WALL)
                 can = false;
         break;
     case STAY:
@@ -89,17 +94,20 @@ bool canGo(const std::vector<std::vector<GridMesh>>& animationGrid, int agX, int
     return can;
 }
 
-int transformToCenter(int x)
+/* Obtain center coordinate of entity in animation grid from game grid coordinate. */
+int transformToAnimationGridCenter(int ggX)
 {
-    return x * ANIMATION_GRID_SCALE + ANIMATION_GRID_SCALE / 2;
+    return ggX * ANIMATION_GRID_SCALE + ANIMATION_GRID_SCALE / 2;
 }
 
-int transformToTip(int x)
+/* Obtain left top tip coordinate of entity in animation grid from its center in animation grid coordinate. */
+int getAnimationGridTip(int agX)
 {
-    return x - ANIMATION_GRID_SCALE / 2;
+    return agX - ANIMATION_GRID_SCALE / 2;
 }
 
-int getCoordinate(int x)
+/* Obtain left top tip coordinate of entity in texture grid from animation grid coordinate. */
+int transformToTextureGridTip(int agX)
 {
-    return x * ANIMATION_GRID_MESH_SIZE;
+    return agX * ANIMATION_GRID_MESH_SIZE;
 }

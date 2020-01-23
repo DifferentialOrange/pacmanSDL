@@ -20,18 +20,19 @@ static const int SCREEN_HEIGHT = 450;
 static const int GAME_GRID_MESH_SIZE = 90;
 
 static const int ANIMATION_GRID_SCALE = 9;
-static_assert(ANIMATION_GRID_SCALE % 2 == 1, "Animation grid scale should be an odd number");
+static_assert( ANIMATION_GRID_SCALE % 2 == 1, "Animation grid scale should be an odd number");
 
 static const int ANIMATION_GRID_MESH_SIZE = GAME_GRID_MESH_SIZE / ANIMATION_GRID_SCALE;
-static_assert(GAME_GRID_MESH_SIZE % ANIMATION_GRID_SCALE == 0, "Animation grid scale should divide game grid mesh size");
+static_assert( GAME_GRID_MESH_SIZE % ANIMATION_GRID_SCALE == 0, "Animation grid scale should divide game grid mesh size");
 
 enum GridMesh { FREE, WALL };
 
 std::vector<std::vector<GridMesh>> getAnimationGrid();
+std::vector<std::vector<GridMesh>> getGameGrid();
 bool canGo(const std::vector<std::vector<GridMesh>>& animationGrid, int agX, int agY, Direction direction);
 
-int transformToCenter(int x);
-int transformToTip(int x);
-int getCoordinate(int x);
+int transformToAnimationGridCenter(int ggX);
+int getAnimationGridTip(int agX);
+int transformToTextureGridTip(int agX);
 
 #endif // MAP_HPP

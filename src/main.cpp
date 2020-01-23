@@ -73,13 +73,13 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *
     renderTexture(tex, ren, dst, clip);
 }
 
-void renderScene(SDL_Renderer *renderer, SDL_Texture *image, int scaledGamePosX, int scaledGamePosY)
+void renderScene(SDL_Renderer *renderer, SDL_Texture *image, int agX, int agY)
 {
     // Render the scene
     SDL_RenderClear(renderer);
     renderTexture(image, renderer,
-        getCoordinate(transformToTip(scaledGamePosX)),
-        getCoordinate(transformToTip(scaledGamePosY)));
+        transformToTextureGridTip(getAnimationGridTip(agX)),
+        transformToTextureGridTip(getAnimationGridTip(agY)));
     SDL_RenderPresent(renderer);
 }
 
@@ -124,13 +124,14 @@ int main()
         return 1;
     }
 
-    std::vector<std::vector<GridMesh>> AGField = getAnimationGrid();
+    std::vector<std::vector<GridMesh>> animationGrid = getAnimationGrid();
 
-    unsigned gamePosX = 1;
-    unsigned gamePosY = 1;
+    /* Starting point. */
+    int ggX = 1;
+    int ggY = 1;
 
-    unsigned scaledGamePosX = transformToCenter(gamePosX);
-    unsigned scaledGamePosY = transformToCenter(gamePosY);
+    int agX = transformToAnimationGridCenter(ggX);
+    int agY = transformToAnimationGridCenter(ggY);
 
     bool quit = false;
     Direction direction = STAY;
@@ -143,28 +144,28 @@ int main()
             if (e.type == SDL_KEYDOWN) {
                 switch (e.key.keysym.sym) {
                 case SDLK_UP:
-                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, UP))
+                    if (canGo(animationGrid, agX, agY, UP))
                         direction = UP;
                     else
                         direction = STAY;
                     break;
 
                 case SDLK_DOWN:
-                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, DOWN))
+                    if (canGo(animationGrid, agX, agY, DOWN))
                         direction = DOWN;
                     else
                         direction = STAY;
                     break;
 
                 case SDLK_LEFT:
-                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, LEFT))
+                    if (canGo(animationGrid, agX, agY, LEFT))
                         direction = LEFT;
                     else
                         direction = STAY;
                     break;
 
                 case SDLK_RIGHT:
-                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, RIGHT))
+                    if (canGo(animationGrid, agX, agY, RIGHT))
                         direction = RIGHT;
                     else
                         direction = STAY;
@@ -183,34 +184,34 @@ int main()
         switch (direction) {
         case UP:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
-                scaledGamePosY -= 1;
-                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                agY -= 1;
+                renderScene(renderer, image, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case DOWN:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
-                scaledGamePosY += 1;
-                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                agY += 1;
+                renderScene(renderer, image, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case LEFT:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
-                scaledGamePosX -= 1;
-                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                agX -= 1;
+                renderScene(renderer, image, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case RIGHT:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
-                scaledGamePosX += 1;
-                renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+                agX += 1;
+                renderScene(renderer, image, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case STAY:
-            renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
+            renderScene(renderer, image, agX, agY);
             break;
         }
         direction = STAY;
