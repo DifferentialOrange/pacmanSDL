@@ -124,7 +124,7 @@ int main()
         return 1;
     }
 
-    std::vector<std::vector<int>> AGField = getAnimtaionGridField();
+    std::vector<std::vector<gridMesh>> AGField = getAnimationGrid();
 
     unsigned gamePosX = 1;
     unsigned gamePosY = 1;
@@ -182,28 +182,28 @@ int main()
 
         switch (dir) {
         case UP:
-            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 scaledGamePosY -= 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(30);
             }
             break;
         case DOWN:
-            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 scaledGamePosY += 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(30);
             }
             break;
         case LEFT:
-            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 scaledGamePosX -= 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(30);
             }
             break;
         case RIGHT:
-            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 scaledGamePosX += 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(30);

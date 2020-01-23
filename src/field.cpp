@@ -3,11 +3,7 @@
 #include "res_path.hpp"
 #include "field.hpp"
 
-// Implying our field has boundary on the rims
-// 0 -- free
-// 1 -- wall
-
-static std::vector<std::vector<int>> readGameGridFieldFromFile(const std::string& fileName)
+static std::vector<std::vector<gridMesh>> readGameGrid(const std::string& fileName)
 {
     const std::string filePath = getResourcePath() + fileName;
 
@@ -16,25 +12,36 @@ static std::vector<std::vector<int>> readGameGridFieldFromFile(const std::string
 
     fieldFile >> fieldWidth >> fieldHeigth;
 
-    std::vector<std::vector<int>> field(fieldHeigth, std::vector<int>(fieldWidth));
+    std::vector<std::vector<gridMesh>> field(fieldHeigth, std::vector<gridMesh>(fieldWidth));
 
     for (int i = 0; i < fieldWidth; ++i)
-        for (int j = 0; j < fieldHeigth; ++j)
-            fieldFile >> field[i][j];
+        for (int j = 0; j < fieldHeigth; ++j) {
+            int gridMeshValue;
+            fieldFile >> gridMeshValue;
+
+            switch(gridMeshValue) {
+            case 0: 
+                field[i][j] = FREE;
+                break;
+            case 1: 
+                field[i][j] = WALL;
+                break;
+            }
+        }
 
     return field;
 }
 
-std::vector<std::vector<int>> getAnimtaionGridField()
+std::vector<std::vector<gridMesh>> getAnimationGrid()
 {
-    auto gameGridField = readGameGridFieldFromFile("field.txt");
+    auto gameGridField = readGameGrid("field.txt");
 
     int rawFieldWidth  = gameGridField[0].size();
     int rawFieldHeight = gameGridField.size();
     int scaledFieldWidth  = rawFieldWidth * ANIMATION_GRID_SCALE;
     int scaledFieldHeight = rawFieldHeight * ANIMATION_GRID_SCALE;
 
-    std::vector<std::vector<int>> scaledField(scaledFieldHeight, std::vector<int>(scaledFieldWidth));
+    std::vector<std::vector<gridMesh>> scaledField(scaledFieldHeight, std::vector<gridMesh>(scaledFieldWidth));
 
     for (int rawI = 0; rawI < rawFieldWidth; ++rawI)
         for (int rawJ = 0; rawJ < rawFieldHeight; ++rawJ)
@@ -46,32 +53,33 @@ std::vector<std::vector<int>> getAnimtaionGridField()
 }
 
 /* 
- * Check if we can go in the animation grid field
- * (posX, posY) is the position of center of character
+ * Check if we can go in the animation grid field.
+ * (AGposX, AGposY) is the position of center of character.
+ * Now we imply our field has boundary on the rims, REWORK LATER.
  */
-bool canGo(const std::vector<std::vector<int>>& field, int AGposX, int AGposY, direction dir)
+bool canGo(const std::vector<std::vector<gridMesh>>& field, int AGposX, int AGposY, direction dir)
 {
     bool can = true;
 
     switch (dir) {
     case UP:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY - ANIMATION_GRID_SCALE][AGposX + i] == 1)
+            if (field[AGposY - ANIMATION_GRID_SCALE][AGposX + i] == WALL)
                 can = false;
         break;
     case DOWN:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY + ANIMATION_GRID_SCALE][AGposX + i] == 1)
+            if (field[AGposY + ANIMATION_GRID_SCALE][AGposX + i] == WALL)
                 can = false;
         break;
     case LEFT:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY + i][AGposX - ANIMATION_GRID_SCALE] == 1)
+            if (field[AGposY + i][AGposX - ANIMATION_GRID_SCALE] == WALL)
                 can = false;
         break;
     case RIGHT:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY + i][AGposX + ANIMATION_GRID_SCALE] == 1)
+            if (field[AGposY + i][AGposX + ANIMATION_GRID_SCALE] == WALL)
                 can = false;
         break;
     case STAY:

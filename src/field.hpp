@@ -25,8 +25,10 @@ static_assert(ANIMATION_GRID_SCALE % 2 == 1, "Animation grid scale should be an 
 static const int ANIMATION_GRID_MESH_SIZE = GAME_GRID_MESH_SIZE / ANIMATION_GRID_SCALE;
 static_assert(GAME_GRID_MESH_SIZE % ANIMATION_GRID_SCALE == 0, "Animation grid scale should divide game grid mesh size");
 
-std::vector<std::vector<int>> getAnimtaionGridField();
-bool canGo(const std::vector<std::vector<int>>& field, int AGposX, int AGposY, direction dir);
+enum gridMesh { FREE, WALL };
+
+std::vector<std::vector<gridMesh>> getAnimationGrid();
+bool canGo(const std::vector<std::vector<gridMesh>>& field, int AGposX, int AGposY, direction dir);
 
 int transformToCenter(int x);
 int transformToTip(int x);
