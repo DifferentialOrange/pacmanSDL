@@ -4,8 +4,8 @@
 #include <vector>
 #include "consts.hpp"
 
-static const int SCREEN_WIDTH  = 450;
-static const int SCREEN_HEIGHT = 450;
+static const int SCREEN_WIDTH  = 945;
+static const int SCREEN_HEIGHT = 1215;
 
 /*
  * We will deal with three levels of grid for the game field.
@@ -17,9 +17,9 @@ static const int SCREEN_HEIGHT = 450;
  * 3. Texture grid (tg) -- every grid mesh represents exactly one pixel.
  */
 
-static const int GAME_GRID_MESH_SIZE = 90;
+static const int GAME_GRID_MESH_SIZE = 45;
 
-static const int ANIMATION_GRID_SCALE = 9;
+static const int ANIMATION_GRID_SCALE = 3;
 static_assert( ANIMATION_GRID_SCALE % 2 == 1, "Animation grid scale should be an odd number");
 
 static const int ANIMATION_GRID_MESH_SIZE = GAME_GRID_MESH_SIZE / ANIMATION_GRID_SCALE;

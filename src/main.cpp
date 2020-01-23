@@ -127,8 +127,8 @@ int main()
     std::vector<std::vector<GridMesh>> animationGrid = getAnimationGrid();
 
     /* Starting point. */
-    int ggX = 1;
-    int ggY = 1;
+    int ggX = 10;
+    int ggY = 15;
 
     int agX = transformToAnimationGridCenter(ggX);
     int agY = transformToAnimationGridCenter(ggY);
