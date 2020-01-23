@@ -14,8 +14,8 @@ static std::vector<std::vector<GridMesh>> readGameGrid(const std::string& fileNa
 
     static std::vector<std::vector<GridMesh>> gameGrid(gridHeigth, std::vector<GridMesh>(gridWidth));
 
-    for (int i = 0; i < gridWidth; ++i)
-        for (int j = 0; j < gridHeigth; ++j) {
+    for (int i = 0; i < gridHeigth; ++i)
+        for (int j = 0; j < gridWidth; ++j) {
             int GridMeshValue;
             gridFile >> GridMeshValue;
 
@@ -48,8 +48,8 @@ std::vector<std::vector<GridMesh>> getAnimationGrid()
 
     std::vector<std::vector<GridMesh>> animationGrid(animationGridHeight, std::vector<GridMesh>(animationGridWidth));
 
-    for (int ggI = 0; ggI < gameGridWidth; ++ggI)
-        for (int ggJ = 0; ggJ < gameGridHeight; ++ggJ)
+    for (int ggI = 0; ggI < gameGridHeight; ++ggI)
+        for (int ggJ = 0; ggJ < gameGridWidth; ++ggJ)
             for (int agI = 0; agI < ANIMATION_GRID_SCALE; ++agI)
                 for (int agJ = 0; agJ < ANIMATION_GRID_SCALE; ++agJ)
                     animationGrid[ANIMATION_GRID_SCALE * ggI + agI][ANIMATION_GRID_SCALE * ggJ + agJ] = gameGrid[ggI][ggJ];
