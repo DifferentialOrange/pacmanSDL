@@ -7,14 +7,26 @@
 static const int SCREEN_WIDTH  = 450;
 static const int SCREEN_HEIGHT = 450;
 
-static const int TEXTURE_SIZE  = 90;
+/*
+ * We will deal with three levels of grid for the game field.
+ * 1. Game grid (Game) -- the size of the one square mesh is equal to the size of Pacman itself.
+ * Classic Pacman field is 21x27 in game grid terms.
+ * field.txt file corresponds one number to one game grid mesh.
+ * 2. Animation grid (Animation) -- every square game grid mesh partitioned into 
+ * ANIMATION_GRID_SCALE * ANIMATION_GRID_SCALE meshes to provide smooth movement animation.
+ * 3. Texture grid (Texture) -- every grid mesh represents exactly one pixel.
+ */
 
-static const int ANIMATION_FIELD_SCALE = 9;
-// Ensure it is a whole number
-static const int TEXTURE_STEP = TEXTURE_SIZE / ANIMATION_FIELD_SCALE;
+static const int GAME_GRID_MESH_SIZE = 90;
+
+static const int ANIMATION_GRID_SCALE = 9;
+static_assert(ANIMATION_GRID_SCALE % 2 == 1, "Animation grid scale should be an odd number");
+
+static const int ANIMATION_GRID_MESH_SIZE = GAME_GRID_MESH_SIZE / ANIMATION_GRID_SCALE;
+static_assert(GAME_GRID_MESH_SIZE % ANIMATION_GRID_SCALE == 0, "Animation grid scale should divide game grid mesh size");
 
 std::vector<std::vector<int>> getAnimtaionGridField();
-bool canGo(const std::vector<std::vector<int>>& field, int posX, int posY, direction dir);
+bool canGo(const std::vector<std::vector<int>>& field, int AGposX, int AGposY, direction dir);
 
 int transformToCenter(int x);
 int transformToTip(int x);
