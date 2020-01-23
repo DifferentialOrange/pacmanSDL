@@ -124,7 +124,7 @@ int main()
         return 1;
     }
 
-    std::vector<std::vector<gridMesh>> AGField = getAnimationGrid();
+    std::vector<std::vector<GridMesh>> AGField = getAnimationGrid();
 
     unsigned gamePosX = 1;
     unsigned gamePosY = 1;
@@ -133,7 +133,7 @@ int main()
     unsigned scaledGamePosY = transformToCenter(gamePosY);
 
     bool quit = false;
-    direction dir = STAY;
+    Direction direction = STAY;
     SDL_Event e;
     while (!quit) {
         while (SDL_PollEvent(&e)) {
@@ -144,30 +144,30 @@ int main()
                 switch (e.key.keysym.sym) {
                 case SDLK_UP:
                     if (canGo(AGField, scaledGamePosX, scaledGamePosY, UP))
-                        dir = UP;
+                        direction = UP;
                     else
-                        dir = STAY;
+                        direction = STAY;
                     break;
 
                 case SDLK_DOWN:
                     if (canGo(AGField, scaledGamePosX, scaledGamePosY, DOWN))
-                        dir = DOWN;
+                        direction = DOWN;
                     else
-                        dir = STAY;
+                        direction = STAY;
                     break;
 
                 case SDLK_LEFT:
                     if (canGo(AGField, scaledGamePosX, scaledGamePosY, LEFT))
-                        dir = LEFT;
+                        direction = LEFT;
                     else
-                        dir = STAY;
+                        direction = STAY;
                     break;
 
                 case SDLK_RIGHT:
                     if (canGo(AGField, scaledGamePosX, scaledGamePosY, RIGHT))
-                        dir = RIGHT;
+                        direction = RIGHT;
                     else
-                        dir = STAY;
+                        direction = STAY;
                     break;
 
                 case SDLK_ESCAPE:
@@ -180,7 +180,7 @@ int main()
             }
         }
 
-        switch (dir) {
+        switch (direction) {
         case UP:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 scaledGamePosY -= 1;
@@ -213,7 +213,7 @@ int main()
             renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
             break;
         }
-        dir = STAY;
+        direction = STAY;
     }
 
     cleanup(image, renderer, window);

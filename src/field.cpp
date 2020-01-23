@@ -3,83 +3,83 @@
 #include "res_path.hpp"
 #include "field.hpp"
 
-static std::vector<std::vector<gridMesh>> readGameGrid(const std::string& fileName)
+static std::vector<std::vector<GridMesh>> readGameGrid(const std::string& fileName)
 {
     const std::string filePath = getResourcePath() + fileName;
 
-    std::fstream fieldFile(filePath);
-    int fieldWidth, fieldHeigth;
+    std::fstream gridFile(filePath);
+    int gridWidth, gridHeigth;
 
-    fieldFile >> fieldWidth >> fieldHeigth;
+    gridFile >> gridWidth >> gridHeigth;
 
-    std::vector<std::vector<gridMesh>> field(fieldHeigth, std::vector<gridMesh>(fieldWidth));
+    std::vector<std::vector<GridMesh>> gameGrid(gridHeigth, std::vector<GridMesh>(gridWidth));
 
-    for (int i = 0; i < fieldWidth; ++i)
-        for (int j = 0; j < fieldHeigth; ++j) {
-            int gridMeshValue;
-            fieldFile >> gridMeshValue;
+    for (int i = 0; i < gridWidth; ++i)
+        for (int j = 0; j < gridHeigth; ++j) {
+            int GridMeshValue;
+            gridFile >> GridMeshValue;
 
-            switch(gridMeshValue) {
+            switch(GridMeshValue) {
             case 0: 
-                field[i][j] = FREE;
+                gameGrid[i][j] = FREE;
                 break;
             case 1: 
-                field[i][j] = WALL;
+                gameGrid[i][j] = WALL;
                 break;
             }
         }
 
-    return field;
+    return gameGrid;
 }
 
-std::vector<std::vector<gridMesh>> getAnimationGrid()
+std::vector<std::vector<GridMesh>> getAnimationGrid()
 {
-    auto gameGridField = readGameGrid("field.txt");
+    auto gameGrid = readGameGrid("field.txt");
 
-    int rawFieldWidth  = gameGridField[0].size();
-    int rawFieldHeight = gameGridField.size();
-    int scaledFieldWidth  = rawFieldWidth * ANIMATION_GRID_SCALE;
-    int scaledFieldHeight = rawFieldHeight * ANIMATION_GRID_SCALE;
+    int gameGridWidth = gameGrid[0].size();
+    int gameGridHeight = gameGrid.size();
+    int animationGridWidth = gameGridWidth * ANIMATION_GRID_SCALE;
+    int animationGridHeight = gameGridHeight * ANIMATION_GRID_SCALE;
 
-    std::vector<std::vector<gridMesh>> scaledField(scaledFieldHeight, std::vector<gridMesh>(scaledFieldWidth));
+    std::vector<std::vector<GridMesh>> animationGrid(animationGridHeight, std::vector<GridMesh>(animationGridWidth));
 
-    for (int rawI = 0; rawI < rawFieldWidth; ++rawI)
-        for (int rawJ = 0; rawJ < rawFieldHeight; ++rawJ)
-            for (int scI = 0; scI < ANIMATION_GRID_SCALE; ++scI)
-                for (int scJ = 0; scJ < ANIMATION_GRID_SCALE; ++scJ)
-                    scaledField[ANIMATION_GRID_SCALE * rawI + scI][ANIMATION_GRID_SCALE * rawJ + scJ] = gameGridField[rawI][rawJ];
+    for (int ggI = 0; ggI < gameGridWidth; ++ggI)
+        for (int ggJ = 0; ggJ < gameGridHeight; ++ggJ)
+            for (int agI = 0; agI < ANIMATION_GRID_SCALE; ++agI)
+                for (int agJ = 0; agJ < ANIMATION_GRID_SCALE; ++agJ)
+                    animationGrid[ANIMATION_GRID_SCALE * ggI + agI][ANIMATION_GRID_SCALE * ggJ + agJ] = gameGrid[ggI][ggJ];
 
-    return scaledField;
+    return animationGrid;
 }
 
 /* 
  * Check if we can go in the animation grid field.
- * (AGposX, AGposY) is the position of center of character.
+ * (agX, agY) is the position of the center of character.
  * Now we imply our field has boundary on the rims, REWORK LATER.
  */
-bool canGo(const std::vector<std::vector<gridMesh>>& field, int AGposX, int AGposY, direction dir)
+bool canGo(const std::vector<std::vector<GridMesh>>& animationGrid, int agX, int agY, Direction direction)
 {
     bool can = true;
 
-    switch (dir) {
+    switch (direction) {
     case UP:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY - ANIMATION_GRID_SCALE][AGposX + i] == WALL)
+            if (animationGrid[AGposY - ANIMATION_GRID_SCALE][AGposX + i] == WALL)
                 can = false;
         break;
     case DOWN:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY + ANIMATION_GRID_SCALE][AGposX + i] == WALL)
+            if (animationGrid[AGposY + ANIMATION_GRID_SCALE][AGposX + i] == WALL)
                 can = false;
         break;
     case LEFT:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY + i][AGposX - ANIMATION_GRID_SCALE] == WALL)
+            if (animationGrid[AGposY + i][AGposX - ANIMATION_GRID_SCALE] == WALL)
                 can = false;
         break;
     case RIGHT:
         for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (field[AGposY + i][AGposX + ANIMATION_GRID_SCALE] == WALL)
+            if (animationGrid[AGposY + i][AGposX + ANIMATION_GRID_SCALE] == WALL)
                 can = false;
         break;
     case STAY:
