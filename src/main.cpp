@@ -73,14 +73,41 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *
     renderTexture(tex, ren, dst, clip);
 }
 
-void renderScene(SDL_Renderer *renderer, SDL_Texture *image, int agX, int agY)
+void renderScene(SDL_Renderer *renderer, SDL_Texture *image, int agX, int agY, SDL_Rect *clip = nullptr)
 {
     // Render the scene
     SDL_RenderClear(renderer);
     renderTexture(image, renderer,
         transformToTextureGridTip(getAnimationGridTip(agX)),
-        transformToTextureGridTip(getAnimationGridTip(agY)));
+        transformToTextureGridTip(getAnimationGridTip(agY)),
+        clip);
     SDL_RenderPresent(renderer);
+}
+
+SDL_Rect *getPacmanClip(SDL_Rect clips[5], Direction direction = STAY)
+{
+    static bool mouthOpened = true;
+
+    if (mouthOpened == false) {
+        mouthOpened = true;
+        return &clips[0];
+    } else {
+        mouthOpened = false;
+        switch (direction) {
+        case UP:
+            return &clips[2];
+        case DOWN:
+            return &clips[4];
+        case LEFT:
+            return &clips[3];
+        case RIGHT:
+            return &clips[1];
+        case STAY:
+            return &clips[1];
+        }
+    }
+
+    return nullptr;
 }
 
 int main()
@@ -123,6 +150,16 @@ int main()
         SDL_Quit();
         return 1;
     }
+
+    // Setup the clips for pacman
+    SDL_Rect clips[5];
+    for (int i = 0; i < 5; ++i) {
+        clips[i].x = i * GAME_GRID_MESH_SIZE;
+        clips[i].y = 0;
+        clips[i].w = GAME_GRID_MESH_SIZE;
+        clips[i].h = GAME_GRID_MESH_SIZE;
+    }
+    SDL_Rect *pacmanClip = &clips[1];
 
     std::vector<std::vector<GridMesh>> animationGrid = getAnimationGrid();
 
@@ -181,37 +218,42 @@ int main()
             }
         }
 
+
         switch (direction) {
         case UP:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agY -= 1;
-                renderScene(renderer, pacman, agX, agY);
-                SDL_Delay(30);
+                pacmanClip = getPacmanClip(clips, direction);
+                renderScene(renderer, pacman, agX, agY, pacmanClip);
+                SDL_Delay(100);
             }
             break;
         case DOWN:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agY += 1;
-                renderScene(renderer, pacman, agX, agY);
-                SDL_Delay(30);
+                pacmanClip = getPacmanClip(clips, direction);
+                renderScene(renderer, pacman, agX, agY, pacmanClip);
+                SDL_Delay(100);
             }
             break;
         case LEFT:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agX -= 1;
-                renderScene(renderer, pacman, agX, agY);
-                SDL_Delay(30);
+                pacmanClip = getPacmanClip(clips, direction);
+                renderScene(renderer, pacman, agX, agY, pacmanClip);
+                SDL_Delay(100);
             }
             break;
         case RIGHT:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agX += 1;
-                renderScene(renderer, pacman, agX, agY);
-                SDL_Delay(30);
+                pacmanClip = getPacmanClip(clips, direction);
+                renderScene(renderer, pacman, agX, agY, pacmanClip);
+                SDL_Delay(100);
             }
             break;
         case STAY:
-            renderScene(renderer, pacman, agX, agY);
+            renderScene(renderer, pacman, agX, agY, pacmanClip);
             break;
         }
         direction = STAY;
