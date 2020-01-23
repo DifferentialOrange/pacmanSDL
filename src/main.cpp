@@ -116,9 +116,9 @@ int main()
     }
 
     const std::string resPath = getResourcePath();
-    SDL_Texture *image = loadTexture(resPath + "image.png", renderer);
-    if (image == nullptr) {
-        cleanup(image, renderer, window);
+    SDL_Texture *pacman = loadTexture(resPath + "pacman.png", renderer);
+    if (pacman == nullptr) {
+        cleanup(pacman, renderer, window);
         IMG_Quit();
         SDL_Quit();
         return 1;
@@ -185,39 +185,39 @@ int main()
         case UP:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agY -= 1;
-                renderScene(renderer, image, agX, agY);
+                renderScene(renderer, pacman, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case DOWN:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agY += 1;
-                renderScene(renderer, image, agX, agY);
+                renderScene(renderer, pacman, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case LEFT:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agX -= 1;
-                renderScene(renderer, image, agX, agY);
+                renderScene(renderer, pacman, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case RIGHT:
             for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
                 agX += 1;
-                renderScene(renderer, image, agX, agY);
+                renderScene(renderer, pacman, agX, agY);
                 SDL_Delay(30);
             }
             break;
         case STAY:
-            renderScene(renderer, image, agX, agY);
+            renderScene(renderer, pacman, agX, agY);
             break;
         }
         direction = STAY;
     }
 
-    cleanup(image, renderer, window);
+    cleanup(pacman, renderer, window);
     IMG_Quit();
 	SDL_Quit();
 	return 0;
