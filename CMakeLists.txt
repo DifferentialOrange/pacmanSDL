@@ -14,6 +14,6 @@ include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2_image REQUIRED)
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 
-add_executable(pacman src/main.cpp src/map.cpp src/res_path.cpp)
+add_executable(pacman src/main.cpp src/field.cpp src/res_path.cpp)
 target_link_libraries(pacman ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY})
 install(TARGETS pacman RUNTIME DESTINATION ${BIN_DIR})

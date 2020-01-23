@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <vector>
-#include "map.hpp"
+#include "field.hpp"
 #include "consts.hpp"
 #include "res_path.hpp"
 #include "cleanup.hpp"
@@ -124,7 +124,7 @@ int main()
         return 1;
     }
 
-    std::vector<std::vector<int>> gameMap = getMap();
+    std::vector<std::vector<int>> AGField = getAnimtaionGridField();
 
     unsigned gamePosX = 1;
     unsigned gamePosY = 1;
@@ -133,7 +133,7 @@ int main()
     unsigned scaledGamePosY = transformToCenter(gamePosY);
 
     bool quit = false;
-    direction dir = STOP;
+    direction dir = STAY;
     SDL_Event e;
     while (!quit) {
         while (SDL_PollEvent(&e)) {
@@ -143,31 +143,31 @@ int main()
             if (e.type == SDL_KEYDOWN) {
                 switch (e.key.keysym.sym) {
                 case SDLK_UP:
-                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, UP))
+                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, UP))
                         dir = UP;
                     else
-                        dir = STOP;
+                        dir = STAY;
                     break;
 
                 case SDLK_DOWN:
-                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, DOWN))
+                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, DOWN))
                         dir = DOWN;
                     else
-                        dir = STOP;
+                        dir = STAY;
                     break;
 
                 case SDLK_LEFT:
-                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, LEFT))
+                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, LEFT))
                         dir = LEFT;
                     else
-                        dir = STOP;
+                        dir = STAY;
                     break;
 
                 case SDLK_RIGHT:
-                    if (canGo(gameMap, scaledGamePosX, scaledGamePosY, RIGHT))
+                    if (canGo(AGField, scaledGamePosX, scaledGamePosY, RIGHT))
                         dir = RIGHT;
                     else
-                        dir = STOP;
+                        dir = STAY;
                     break;
 
                 case SDLK_ESCAPE:
@@ -182,38 +182,38 @@ int main()
 
         switch (dir) {
         case UP:
-            for (int i = 0; i < MAP_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosY -= 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(100);
             }
             break;
         case DOWN:
-            for (int i = 0; i < MAP_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosY += 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(100);
             }
             break;
         case LEFT:
-            for (int i = 0; i < MAP_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosX -= 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(100);
             }
             break;
         case RIGHT:
-            for (int i = 0; i < MAP_SCALE; ++i) {
+            for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosX += 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
                 SDL_Delay(100);
             }
             break;
-        case STOP:
+        case STAY:
             renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
             break;
         }
-        dir = STOP;
+        dir = STAY;
     }
 
     cleanup(image, renderer, window);
