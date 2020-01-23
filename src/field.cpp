@@ -14,17 +14,17 @@ static std::vector<std::vector<GridMesh>> readGameGrid(const std::string& fileNa
 
     static std::vector<std::vector<GridMesh>> gameGrid(gridHeigth, std::vector<GridMesh>(gridWidth));
 
-    for (int i = 0; i < gridHeigth; ++i)
-        for (int j = 0; j < gridWidth; ++j) {
+    for (auto&& row : gameGrid)
+        for (auto&& el : row) {
             int GridMeshValue;
             gridFile >> GridMeshValue;
 
             switch(GridMeshValue) {
             case 0: 
-                gameGrid[i][j] = FREE;
+                el = FREE;
                 break;
             case 1: 
-                gameGrid[i][j] = WALL;
+                el = WALL;
                 break;
             }
         }
