@@ -9,7 +9,7 @@ static const int SCREEN_HEIGHT = 450;
 
 static const int TEXTURE_SIZE  = 90;
 
-static const int ANIMATION_FIELD_SCALE = 3;
+static const int ANIMATION_FIELD_SCALE = 9;
 // Ensure it is a whole number
 static const int TEXTURE_STEP = TEXTURE_SIZE / ANIMATION_FIELD_SCALE;
 

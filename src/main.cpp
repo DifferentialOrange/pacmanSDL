@@ -185,28 +185,28 @@ int main()
             for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosY -= 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
-                SDL_Delay(100);
+                SDL_Delay(30);
             }
             break;
         case DOWN:
             for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosY += 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
-                SDL_Delay(100);
+                SDL_Delay(30);
             }
             break;
         case LEFT:
             for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosX -= 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
-                SDL_Delay(100);
+                SDL_Delay(30);
             }
             break;
         case RIGHT:
             for (int i = 0; i < ANIMATION_FIELD_SCALE; ++i) {
                 scaledGamePosX += 1;
                 renderScene(renderer, image, scaledGamePosX, scaledGamePosY);
-                SDL_Delay(100);
+                SDL_Delay(30);
             }
             break;
         case STAY:
