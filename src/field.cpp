@@ -12,7 +12,7 @@ static std::vector<std::vector<GridMesh>> readGameGrid(const std::string& fileNa
 
     gridFile >> gridWidth >> gridHeigth;
 
-    static std::vector<std::vector<GridMesh>> gameGrid(gridHeigth, std::vector<GridMesh>(gridWidth));
+    std::vector<std::vector<GridMesh>> gameGrid(gridHeigth, std::vector<GridMesh>(gridWidth));
 
     for (auto&& row : gameGrid)
         for (auto&& el : row) {
@@ -27,12 +27,13 @@ static std::vector<std::vector<GridMesh>> readGameGrid(const std::string& fileNa
 
 std::vector<std::vector<GridMesh>> getGameGrid()
 {
-    return readGameGrid("field.txt");
+    static auto gameGrid = readGameGrid("field.txt");
+    return gameGrid;
 }
 
 std::vector<std::vector<GridMesh>> getAnimationGrid()
 {
-    auto gameGrid = readGameGrid("field.txt");
+    auto gameGrid = getGameGrid();
 
     int gameGridWidth = gameGrid[0].size();
     int gameGridHeight = gameGrid.size();

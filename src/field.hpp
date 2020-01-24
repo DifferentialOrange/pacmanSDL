@@ -26,7 +26,6 @@ static_assert( ANIMATION_GRID_SCALE % 2 == 1, "Animation grid scale should be an
 static const int ANIMATION_GRID_MESH_SIZE = GAME_GRID_MESH_SIZE / ANIMATION_GRID_SCALE;
 static_assert( GAME_GRID_MESH_SIZE % ANIMATION_GRID_SCALE == 0, "Animation grid scale should divide game grid mesh size");
 
-enum GridMesh { FREE, WALL };
 static std::map<int, GridMesh> FileToGrid = { {0, FREE}, {1, WALL} };
 
 std::vector<std::vector<GridMesh>> getAnimationGrid();
