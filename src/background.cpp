@@ -44,23 +44,26 @@ void renderBackground(SDL_Renderer *renderer, SDL_Texture *backgroundImage)
 
     for (int ggY = 0; ggY < heigth; ++ggY)
         for (int ggX = 0; ggX < width; ++ggX) {
-
+            /* Some non-classical cases are not considered. */
             if (isFree(gameGrid, ggX, ggY)) {
                 plotTile(renderer, backgroundImage, clips, ggX, ggY, FREE_TILE);
                 continue;
             }
 
-            bool upWall    = isWall(gameGrid, ggX, ggY - 1);
-            bool downWall  = isWall(gameGrid, ggX, ggY + 1);
-            bool leftWall  = isWall(gameGrid, ggX - 1, ggY);
-            bool rightWall = isWall(gameGrid, ggX + 1, ggY);
+            bool upWall        = isWall(gameGrid, ggX, ggY - 1);
+            bool downWall      = isWall(gameGrid, ggX, ggY + 1);
+            bool leftWall      = isWall(gameGrid, ggX - 1, ggY);
+            bool rightWall     = isWall(gameGrid, ggX + 1, ggY);
+            bool upLeftWall    = isWall(gameGrid, ggX - 1, ggY - 1);
+            bool upRightWall   = isWall(gameGrid, ggX + 1, ggY - 1);
+            bool downLeftWall  = isWall(gameGrid, ggX - 1, ggY + 1);
+            bool downRightWall = isWall(gameGrid, ggX + 1, ggY + 1);
 
             int wallCount = upWall + downWall + leftWall + rightWall;
+            int extendedWallCount = wallCount + upLeftWall + upRightWall +
+                                    downLeftWall + downRightWall;
 
             switch (wallCount) {
-            case 0:
-                plotTile(renderer, backgroundImage, clips, ggX, ggY, FREE_TILE);
-                break;
             case 1:
                 if (upWall) {
                     plotTile(renderer, backgroundImage, clips, ggX, ggY, END_UP);
@@ -81,11 +84,11 @@ void renderBackground(SDL_Renderer *renderer, SDL_Texture *backgroundImage)
                 break;
             case 2:
                 if (upWall && downWall) {
-                    plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGNT_UP_DOWN);
+                    plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGHT_UP_DOWN);
                     break;
                 }
                 if (leftWall && rightWall) {
-                    plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGNT_LEFT_RIGHT);
+                    plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGHT_LEFT_RIGHT);
                     break;
                 }
                 if (rightWall && downWall) {
@@ -106,22 +109,86 @@ void renderBackground(SDL_Renderer *renderer, SDL_Texture *backgroundImage)
                 }
                 break;
             case 3:
-                if (!upWall) {
-                    plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_LEFT_DOWN_RIGHT);
+                switch (extendedWallCount) {
+                case 3:
+                case 4:
+                    if (!upWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_LEFT_DOWN_RIGHT);
+                        break;
+                    }
+                    if (!downWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_LEFT_UP_RIGHT);
+                        break;
+                    }
+                    if (!leftWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_UP_RIGHT_DOWN);
+                        break;
+                    }
+                    if (!rightWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_UP_LEFT_DOWN);
+                        break;
+                    }
+                    break;
+                case 5:
+                case 6:
+                    if (!upWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGHT_LEFT_RIGHT);
+                        break;
+                    }
+                    if (!downWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGHT_LEFT_RIGHT);
+                        break;
+                    }
+                    if (!leftWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGHT_UP_DOWN);
+                        break;
+                    }
+                    if (!rightWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, STRAIGHT_UP_DOWN);
+                        break;
+                    }
+                    break;
+                case 7:
+                    if (!upLeftWall && !upRightWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_LEFT_DOWN_RIGHT);
+                        break;
+                    }
+                    if (!upLeftWall && !downLeftWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_UP_RIGHT_DOWN);
+                        break;
+                    }
+                    if (!downLeftWall && !downRightWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_LEFT_UP_RIGHT);
+                        break;
+                    }
+                    if (!upRightWall && !downRightWall) {
+                        plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_UP_LEFT_DOWN);
+                        break;
+                    }
+                    break;
+                default:
                     break;
                 }
-                if (!downWall) {
+                break;
+            case 4:
+                if (!upLeftWall && !upRightWall) {
                     plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_LEFT_UP_RIGHT);
                     break;
                 }
-                if (!leftWall) {
-                    plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_UP_RIGHT_DOWN);
-                    break;
-                }
-                if (!rightWall) {
+                if (!upLeftWall && !downLeftWall) {
                     plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_UP_LEFT_DOWN);
                     break;
                 }
+                if (!downLeftWall && !downRightWall) {
+                    plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_LEFT_DOWN_RIGHT);
+                    break;
+                }
+                if (!upRightWall && !downRightWall) {
+                    plotTile(renderer, backgroundImage, clips, ggX, ggY, THREEWAY_UP_RIGHT_DOWN);
+                    break;
+                }
+                break;
+            default:
                 break;
             }
         }
