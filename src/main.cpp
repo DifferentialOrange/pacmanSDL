@@ -128,31 +128,19 @@ int main()
             if (e.type == SDL_KEYDOWN) {
                 switch (e.key.keysym.sym) {
                 case SDLK_UP:
-                    if (canGo(animationGrid, agX, agY, UP))
-                        direction = UP;
-                    else
-                        direction = STAY;
+                    direction = UP;
                     break;
 
                 case SDLK_DOWN:
-                    if (canGo(animationGrid, agX, agY, DOWN))
-                        direction = DOWN;
-                    else
-                        direction = STAY;
+                    direction = DOWN;
                     break;
 
                 case SDLK_LEFT:
-                    if (canGo(animationGrid, agX, agY, LEFT))
-                        direction = LEFT;
-                    else
-                        direction = STAY;
+                    direction = LEFT;
                     break;
 
                 case SDLK_RIGHT:
-                    if (canGo(animationGrid, agX, agY, RIGHT))
-                        direction = RIGHT;
-                    else
-                        direction = STAY;
+                    direction = RIGHT;
                     break;
 
                 case SDLK_ESCAPE:
@@ -168,42 +156,35 @@ int main()
 
         switch (direction) {
         case UP:
-            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
+            if (canGo(animationGrid, agX, agY, UP)) {
                 agY -= 1;
                 pacmanClip = getPacmanClip(clips, direction);
-                renderScene(renderer, pacman, backgroundImage, agX, agY, pacmanClip);
-                SDL_Delay(100);
             }
             break;
         case DOWN:
-            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
+            if (canGo(animationGrid, agX, agY, DOWN)) {
                 agY += 1;
                 pacmanClip = getPacmanClip(clips, direction);
-                renderScene(renderer, pacman, backgroundImage, agX, agY, pacmanClip);
-                SDL_Delay(100);
             }
             break;
         case LEFT:
-            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
+            if (canGo(animationGrid, agX, agY, LEFT)) {
                 agX -= 1;
                 pacmanClip = getPacmanClip(clips, direction);
-                renderScene(renderer, pacman, backgroundImage, agX, agY, pacmanClip);
-                SDL_Delay(100);
             }
             break;
         case RIGHT:
-            for (int i = 0; i < ANIMATION_GRID_SCALE; ++i) {
+            if (canGo(animationGrid, agX, agY, RIGHT)) {
                 agX += 1;
                 pacmanClip = getPacmanClip(clips, direction);
-                renderScene(renderer, pacman, backgroundImage, agX, agY, pacmanClip);
-                SDL_Delay(100);
             }
             break;
         case STAY:
-            renderScene(renderer, pacman, backgroundImage, agX, agY, pacmanClip);
             break;
         }
-        direction = STAY;
+
+        renderScene(renderer, pacman, backgroundImage, agX, agY, pacmanClip);
+        SDL_Delay(100);
     }
 
     cleanup(pacman, backgroundImage, renderer, window);

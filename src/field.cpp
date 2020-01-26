@@ -62,23 +62,23 @@ bool canGo(const std::vector<std::vector<GridMesh>>& animationGrid, int agX, int
 
     switch (direction) {
     case UP:
-        for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[agY - ANIMATION_GRID_SCALE][agX + i] == WALL)
+        for (int i = - (ANIMATION_GRID_SCALE / 2); i <= ANIMATION_GRID_SCALE / 2; ++i)
+            if (animationGrid[agY - ANIMATION_GRID_SCALE / 2 - 1][agX + i] == WALL)
                 can = false;
         break;
     case DOWN:
-        for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[agY + ANIMATION_GRID_SCALE][agX + i] == WALL)
+        for (int i = - (ANIMATION_GRID_SCALE / 2); i <= ANIMATION_GRID_SCALE / 2; ++i)
+            if (animationGrid[agY + ANIMATION_GRID_SCALE / 2 + 1][agX + i] == WALL)
                 can = false;
         break;
     case LEFT:
-        for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[agY + i][agX - ANIMATION_GRID_SCALE] == WALL)
+        for (int i = - (ANIMATION_GRID_SCALE / 2); i <= ANIMATION_GRID_SCALE / 2; ++i)
+            if (animationGrid[agY + i][agX - ANIMATION_GRID_SCALE / 2 - 1] == WALL)
                 can = false;
         break;
     case RIGHT:
-        for (int i = - ANIMATION_GRID_SCALE / 2; i < ANIMATION_GRID_SCALE / 2; ++i)
-            if (animationGrid[agY + i][agX + ANIMATION_GRID_SCALE] == WALL)
+        for (int i = - (ANIMATION_GRID_SCALE / 2); i <= ANIMATION_GRID_SCALE / 2; ++i)
+            if (animationGrid[agY + i][agX + ANIMATION_GRID_SCALE / 2 + 1] == WALL)
                 can = false;
         break;
     case STAY:
