@@ -31,7 +31,7 @@ std::vector<std::vector<GridMesh>> getGameGrid()
     return gameGrid;
 }
 
-std::vector<std::vector<GridMesh>> getAnimationGrid()
+static std::vector<std::vector<GridMesh>> generateAnimationGrid()
 {
     auto gameGrid = getGameGrid();
 
@@ -48,6 +48,12 @@ std::vector<std::vector<GridMesh>> getAnimationGrid()
                 for (int agJ = 0; agJ < ANIMATION_GRID_SCALE; ++agJ)
                     animationGrid[ANIMATION_GRID_SCALE * ggI + agI][ANIMATION_GRID_SCALE * ggJ + agJ] = gameGrid[ggI][ggJ];
 
+    return animationGrid;
+}
+
+std::vector<std::vector<GridMesh>> getAnimationGrid()
+{
+    static auto animationGrid = generateAnimationGrid();
     return animationGrid;
 }
 
