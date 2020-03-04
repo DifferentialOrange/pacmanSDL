@@ -51,7 +51,7 @@ SDL_Rect *getPacmanClip(SDL_Rect clips[5], Direction direction = STAY)
 
 int main()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         logSDLError(std::cout, "SDL_Init");
         return 1;
     }
@@ -189,6 +189,6 @@ int main()
 
     cleanup(pacman, backgroundImage, renderer, window);
     IMG_Quit();
-	SDL_Quit();
-	return 0;
+    SDL_Quit();
+    return 0;
 }
