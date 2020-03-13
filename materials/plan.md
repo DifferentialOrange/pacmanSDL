@@ -76,3 +76,4 @@ No, round boundaries will break the logic.
 Three grid states: empty, wall, enemy. We can forget for the third one for now.
 Fill this thing by hand? 41x53 -- ok, possible. Also scalable.
 Four grid cell state -- teleport. Also later
+New field is 328x424
