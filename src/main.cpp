@@ -31,7 +31,7 @@ int main()
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("pacman", 100, 100, SCREEN_WIDTH,
+    SDL_Window *window = SDL_CreateWindow("pacman", 700, 100, SCREEN_WIDTH,
             SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         logSDLError(std::cout, "CreateWindow");

@@ -4,7 +4,7 @@
 enum Direction { UP, DOWN, LEFT, RIGHT, STAY };
 enum Block { FREE, WALL };
 
-static const int FIELD_SCALE  = 8; // Size of each field.txt block
+static const int FIELD_SCALE  = 16; // Size of each field.txt block
 static const int BLOCK_WIDTH  = 41;
 static const int BLOCK_HEIGHT = 53;
 
