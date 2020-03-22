@@ -22,15 +22,9 @@ static BlockField readBlockField(const std::string& fileName)
     return blockField;
 }
 
-static BlockField getBlockField()
-{
-    static auto blockField = readBlockField("field.txt");
-    return blockField;
-}
-
 bool canGo(int x, int y)
 {
-    auto blockField = getBlockField();
+    static auto blockField = readBlockField("field.txt");
 
     if (blockField[x / FIELD_SCALE][y / FIELD_SCALE] == FREE)
         return true;
